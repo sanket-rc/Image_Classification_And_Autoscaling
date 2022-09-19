@@ -1,0 +1,6 @@
+terraform/*.pem
+terraform/*.hcl
+terraform/*.yaml
+terraform/*.tfstate
+terraform/*.backup
+terraform/.terraform/*
