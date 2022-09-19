@@ -12,6 +12,6 @@ variable "vpc_cidr_block" {
 }
 
 variable "webtier_ami_id" {
-  type = string
+  type    = string
   default = "ami-05fa00d4c63e32376"
 }

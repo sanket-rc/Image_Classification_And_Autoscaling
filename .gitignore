@@ -3,4 +3,8 @@ terraform/*.hcl
 terraform/*.yaml
 terraform/*.tfstate
 terraform/*.backup
+terraform/.terraform
 terraform/.terraform/*
+.idea
+.idea/*
+
