@@ -20,3 +20,17 @@ variable "apptier_ami_id" {
   type = string
   default = "ami-0bb1040fdb5a076bc"
 }
+
+variable "region" {
+  type = string
+  default = "us-east-1"
+}
+
+variable "aws_access_key_id" {
+  type = string
+}
+
+
+variable "aws_secret_key_id" {
+  type = string
+}

@@ -10,8 +10,12 @@ output "response_queue" {
   value = aws_sqs_queue.response_queue.url
 }
 
-output "scale_queue" {
-  value = aws_sqs_queue.scale_queue.url
+output "terminate_confirm_queue" {
+  value = aws_sqs_queue.terminate_confirm_queue.url
+}
+
+output "terminate_request_queue" {
+  value = aws_sqs_queue.terminate_request_queue.url
 }
 
 output "s3_url_input" {
