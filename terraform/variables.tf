@@ -15,3 +15,8 @@ variable "webtier_ami_id" {
   type    = string
   default = "ami-05fa00d4c63e32376"
 }
+
+variable "apptier_ami_id" {
+  type = string
+  default = "ami-0bb1040fdb5a076bc"
+}

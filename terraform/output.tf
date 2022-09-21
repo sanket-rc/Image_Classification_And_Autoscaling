@@ -15,9 +15,13 @@ output "scale_queue" {
 }
 
 output "s3_url_input" {
-  value = aws_s3_bucket.pro1_input.bucket_prefix
+  value = aws_s3_bucket.pro1_input.bucket
 }
 
 output "s3_url_output" {
-  value = aws_s3_bucket.pro1_output.bucket_prefix
+  value = aws_s3_bucket.pro1_output.bucket
+}
+
+output "app_tier_ami" {
+  value = aws_ami_from_instance.apptier_ami.arn
 }

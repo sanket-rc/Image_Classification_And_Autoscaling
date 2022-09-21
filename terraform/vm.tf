@@ -30,11 +30,11 @@ resource "aws_instance" "web_server_ec2" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.pro1_security_group.id]
   subnet_id                   = aws_subnet.web_tier.id
-  depends_on                  = [local_file.config_file, aws_security_group.pro1_security_group]
+  depends_on                  = [local_file.config_file_web, aws_security_group.pro1_security_group]
 
     provisioner "file" {
-      source      = "/home/kitunni/CloudComputing/Image_Classification_And_Autoscaling/terraform/foo.yaml"
-      destination = "/home/ec2-user/foo.yaml"
+      source      = "config_web.yaml"
+      destination = "/home/ec2-user/config.yaml"
       connection {
         type        = "ssh"
         user        = "ec2-user"
