@@ -7,7 +7,7 @@ resource "aws_key_pair" "ssh-key" {
 # creates the required vpc
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr_block
-  tags       = {
+  tags = {
     Name = "p1_vpc"
   }
 }
@@ -17,7 +17,7 @@ resource "aws_subnet" "web_tier" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  tags                    = {
+  tags = {
     Name = "p1_webtier"
   }
 }
@@ -32,16 +32,26 @@ resource "aws_instance" "web_server_ec2" {
   subnet_id                   = aws_subnet.web_tier.id
   depends_on                  = [local_file.config_file_web, aws_security_group.pro1_security_group]
 
-    provisioner "file" {
-      source      = "config_web.yaml"
-      destination = "/home/ec2-user/config.yaml"
-      connection {
-        type        = "ssh"
-        user        = "ec2-user"
-        host        = self.public_ip
-        private_key = file("id_rsa.pem")
-      }
+  provisioner "file" {
+    source      = "config_web.yaml"
+    destination = "/home/ec2-user/config.yaml"
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      host        = self.public_ip
+      private_key = file("id_rsa.pem")
     }
+  }
+  provisioner "file" {
+    source      = "../python/web_tier"
+    destination = "/home/ec2-user"
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      host        = self.public_ip
+      private_key = file("id_rsa.pem")
+    }
+  }
 
   tags = {
     Name = "Webserver"
@@ -75,7 +85,7 @@ resource "aws_security_group" "pro1_security_group" {
 
 resource "aws_internet_gateway" "internet-gateway" {
   vpc_id = aws_vpc.vpc.id
-  tags   = {
+  tags = {
     Name = "internet_gateway"
   }
 }

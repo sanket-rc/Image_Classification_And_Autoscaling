@@ -1,6 +1,6 @@
 resource "local_file" "config_file_web" {
   content = yamlencode({
-    "REGION_NAME": var.region,
+    "REGION_NAME" : var.region,
     "REQUEST_QUEUE" : aws_sqs_queue.request_queue.url,
     "RESPONSE_QUEUE" : aws_sqs_queue.response_queue.url,
     "INPUT_BUCKET" : aws_s3_bucket.pro1_input.bucket,
@@ -12,15 +12,15 @@ resource "local_file" "config_file_web" {
     "AWS_SECRET_ACCESS_KEY" : var.aws_secret_key_id
     "KEY_NAME" : aws_key_pair.ssh-key.key_name
     "VPC_ID" : aws_vpc.vpc.id
-    "APP_SUBNET_ID": aws_subnet.app_tier.id
-    "WEB_SUBNET_ID": aws_subnet.web_tier.id
+    "APP_SUBNET_ID" : aws_subnet.app_tier.id
+    "WEB_SUBNET_ID" : aws_subnet.web_tier.id
   })
   filename = "config_web.yaml"
 }
 
 resource "local_file" "config_file_app" {
   content = yamlencode({
-    "REGION_NAME": var.region,
+    "REGION_NAME" : var.region,
     "REQUEST_QUEUE" : aws_sqs_queue.request_queue.url,
     "RESPONSE_QUEUE" : aws_sqs_queue.response_queue.url,
     "INPUT_BUCKET" : aws_s3_bucket.pro1_input.bucket,

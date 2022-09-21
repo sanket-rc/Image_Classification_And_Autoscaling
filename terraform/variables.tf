@@ -17,12 +17,12 @@ variable "webtier_ami_id" {
 }
 
 variable "apptier_ami_id" {
-  type = string
+  type    = string
   default = "ami-0bb1040fdb5a076bc"
 }
 
 variable "region" {
-  type = string
+  type    = string
   default = "us-east-1"
 }
 
