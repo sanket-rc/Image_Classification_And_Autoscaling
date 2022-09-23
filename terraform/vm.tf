@@ -33,8 +33,8 @@ resource "aws_instance" "web_server_ec2" {
   depends_on                  = [local_file.config_file_web, aws_security_group.pro1_security_group]
 
   provisioner "file" {
-    source      = "config_web.yaml"
-    destination = "/home/ec2-user/config.yaml"
+    source      = "../python/web_tier"
+    destination = "/home/ec2-user"
     connection {
       type        = "ssh"
       user        = "ec2-user"
@@ -42,9 +42,10 @@ resource "aws_instance" "web_server_ec2" {
       private_key = file("id_rsa.pem")
     }
   }
+
   provisioner "file" {
-    source      = "../python/web_tier"
-    destination = "/home/ec2-user"
+    source      = "config_web.yaml"
+    destination = "/home/ec2-user/web_tier/config.yaml"
     connection {
       type        = "ssh"
       user        = "ec2-user"

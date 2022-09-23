@@ -55,11 +55,12 @@ if __name__ == '__main__':
             required_instances = total_required_instance - total_cancelled_requests
             ec2_pool.launch_instances(required_instances)
         
-        else:
+        elif total_required_instance < 0 :
             delete_instance_count = abs(total_required_instance)
-            # print("Deleting {0} instance of App Tier".format(delete_instance_count))
+            print("Deleting {0} instance of App Tier".format(delete_instance_count))
             ec2_pool.send_Request_to_Shutdown_Queue(delete_instance_count)
         
         ec2_pool.terminate_EC2_Instances()
 
-        #time.sleep(7)
+        time.sleep(10)
+        print("Polling the Request queue for messages")

@@ -16,11 +16,11 @@ REQUEST_QUEUE = config['REQUEST_QUEUE']
 RESPONSE_QUEUE = config['RESPONSE_QUEUE']
 INPUT_BUCKET = config['INPUT_BUCKET']
 OUTPUT_BUCKET = config['OUTPUT_BUCKET']
-IMAGES_DOWNLOAD_PATH = '/home/ubuntu/classifier/images'
+IMAGES_DOWNLOAD_PATH = '/home/ubuntu/classifier'
 CLASSIFICATION_MODEL_DIR = '/home/ubuntu/classifier'
 TERMINATE_REQUEST_QUEUE = config['TERMINATE_REQUEST_QUEUE']
 TERMINATE_CONFIRM_QUEUE=config['TERMINATE_CONFIRM_QUEUE']
-CLASSIFIER_AMI = config['CLASSIFIER_AMI']
+# CLASSIFIER_AMI = config['CLASSIFIER_AMI']
 AWS_ACCESS_KEY_ID = config['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = config['AWS_SECRET_ACCESS_KEY']
 
@@ -89,7 +89,7 @@ while True:
             'classifier_output' : body
         })) # DelaySeconds ??
 
-        # Delete the message from the Request SQS 
+        # Delete the message from the Linux 
         os.remove(image_download_path)
 
         print('Deleting message...')
@@ -109,8 +109,8 @@ while True:
         sqs_client.send_message(QueueUrl=TERMINATE_CONFIRM_QUEUE,
                MessageBody=sys.argv[1],
                DelaySeconds=0,
-               MessageDeduplicationId=str(uuid.uuid4()),
-               MessageGroupId='2'
+            #    MessageDeduplicationId=str(uuid.uuid4()),
+            #    MessageGroupId='2'
             )
         break  # Exit from loop
 

@@ -19,8 +19,8 @@ resource "aws_instance" "app_ec2" {
   depends_on                  = [local_file.config_file_app, aws_security_group.pro1_security_group]
 
   provisioner "file" {
-    source      = "config_app.yaml"
-    destination = "/home/ubuntu/config.yaml"
+    source      = "../python/app_tier"
+    destination = "/home/ubuntu"
     connection {
       type        = "ssh"
       user        = "ubuntu"
@@ -28,9 +28,10 @@ resource "aws_instance" "app_ec2" {
       private_key = file("id_rsa.pem")
     }
   }
+
   provisioner "file" {
-    source      = "../python/app_tier"
-    destination = "/home/ubuntu"
+    source      = "config_app.yaml"
+    destination = "/home/ubuntu/app_tier/config.yaml"
     connection {
       type        = "ssh"
       user        = "ubuntu"

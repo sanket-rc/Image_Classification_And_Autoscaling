@@ -57,9 +57,13 @@ class AppTierEc2Pool:
             app_tier_identifier = self.app_tier_available_ids.pop()
             # Startup script
             user_data = f"""#!/bin/bash
-                runuser -l ubuntu -c 'screen -dm bash -c "python3 /home/ubuntu/app_tier.py {app_tier_identifier}; exec sh"'
+                pip3 install flask;
+                pip3 install boto3;
+                pip3 install pyyaml;
+                su ubuntu -c "python3 /home/ubuntu/app_tier/app_tier.py {app_tier_identifier}; exec sh"
                 """
-            
+            # runuser -l ubuntu -c 'screen -dm bash -c "python3 /home/ubuntu/app_tier/app_tier.py {app_tier_identifier}; exec sh"'
+            # su ec2-user -c 'do whatever you want; ./run.sh &'
             response = resource_ec2.run_instances(
                 ImageId= self.AMI,
                 MinCount = 1,
@@ -114,15 +118,14 @@ class AppTierEc2Pool:
             ec2_client = self.get_EC2_Client()
             response = sqs_client.receive_message(QueueUrl=TERMINATE_CONFIRM_QUEUE, MaxNumberOfMessages=10)
             messages = response.get('Messages', [])
-            #print('Found', len(messages), 'shutdown confirmed messages.')
+            print('Found', len(messages), 'shutdown confirmed messages.') # Change this comment
             # Respond to each shutdown confirmed message
             for message in messages:
                 msg_Identifier = message['ReceiptHandle']
                 app_tier_identifier = int(message['Body'])
-            # self.terminate_instance(app_tier_id)
-                self.app_tier_availale_ids.append(app_tier_identifier)
-                self.instance_ids[app_tier_identifier] = None
-                #self.app_tier_ids[app_tier_identifier] = None ## Do we need this ?????
-                ec2_client.terminate_instances(InstanceIds=[self.instance_id])
+                if app_tier_identifier is not None:
+                    ec2_client.terminate_instances(InstanceIds=[self.instance_ids[app_tier_identifier]])
+                    self.instance_ids[app_tier_identifier] = None
+                    self.app_tier_available_ids.append(app_tier_identifier)
                 sqs_client.delete_message(QueueUrl=TERMINATE_CONFIRM_QUEUE, ReceiptHandle=msg_Identifier)
                 self.shutdown_requests_count -= 1
