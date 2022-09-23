@@ -1,13 +1,3 @@
-# creates a subnet in the vpc for web tier
-resource "aws_subnet" "app_tier" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.2.0/24"
-  map_public_ip_on_launch = true
-  tags = {
-    Name = "p1_apptier"
-  }
-}
-
 # Creates the ec2 instance
 resource "aws_instance" "app_ec2" {
   ami                         = var.apptier_ami_id
@@ -17,6 +7,7 @@ resource "aws_instance" "app_ec2" {
   vpc_security_group_ids      = [aws_security_group.pro1_security_group.id]
   subnet_id                   = aws_subnet.app_tier.id
   depends_on                  = [local_file.config_file_app, aws_security_group.pro1_security_group]
+  user_data = file("startup_apptier.sh")
 
   provisioner "file" {
     source      = "../python/app_tier"
@@ -43,11 +34,6 @@ resource "aws_instance" "app_ec2" {
   tags = {
     Name = "apptier_ec2_1"
   }
-}
-
-resource "aws_route_table_association" "public-apptier_subnet-route-table-association" {
-  subnet_id      = aws_subnet.app_tier.id
-  route_table_id = aws_route_table.public-route-table.id
 }
 
 resource "aws_ami_from_instance" "apptier_ami" {

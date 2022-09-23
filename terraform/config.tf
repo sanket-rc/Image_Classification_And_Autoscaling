@@ -1,3 +1,9 @@
+# Creates a key pair in aws, we use this public key's priv key to login to vm's
+resource "aws_key_pair" "ssh-key" {
+  key_name   = "ssh-key"
+  public_key = var.ssh_public_key
+}
+
 resource "local_file" "config_file_web" {
   content = yamlencode({
     "REGION_NAME" : var.region,

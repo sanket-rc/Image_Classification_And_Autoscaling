@@ -1,15 +1,15 @@
 resource "aws_s3_bucket" "pro1_input" {
-  bucket = "pro1inputtest"
-
+  bucket        = var.input_bucket_name
+  force_destroy = true
   tags = {
-    Name = "pro1input"
+    Name = var.input_bucket_name
   }
 }
 
 resource "aws_s3_bucket" "pro1_output" {
-  bucket = "pro1outputtest"
-
+  bucket        = var.output_bucket_name
+  force_destroy = true
   tags = {
-    Name = "pro1output"
+    Name = var.output_bucket_name
   }
 }

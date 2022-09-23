@@ -34,3 +34,13 @@ variable "aws_access_key_id" {
 variable "aws_secret_key_id" {
   type = string
 }
+
+variable "input_bucket_name" {
+  type    = string
+  default = "pro1input"
+}
+
+variable "output_bucket_name" {
+  type    = string
+  default = "pro1output"
+}
