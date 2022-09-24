@@ -67,11 +67,11 @@ def send_img_request_to_sqs(filename):
 # def poll_response_queue(request_id):
 #     sqs_client = get_SQS_Client()
 
-#     messages = sqs_client.receive_message(QueueUrl=RESPONSE_QUEUE, MaxNumberOfMessages=10)
-#     messages = messages.get('Messages', [])
-#     for message in messages:
-#         msg_Identifier = message['ReceiptHandle']
-#         response = json.loads((message['Body']))
-#         if response['request_id'] == request_id:
-#             return response
-#     return None
+    # messages = sqs_client.receive_message(QueueUrl=RESPONSE_QUEUE, MaxNumberOfMessages=10)
+    # messages = messages.get('Messages', [])
+    # for message in messages:
+    #     msg_Identifier = message['ReceiptHandle']
+    #     response = json.loads((message['Body']))
+    #     if response['request_id'] == request_id:
+    #         return response
+    # return None

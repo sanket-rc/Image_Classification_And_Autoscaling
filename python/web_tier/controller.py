@@ -1,6 +1,8 @@
+from urllib import request
 import boto3,time
 from app_tier_ec2_pool import AppTierEc2Pool
 import datetime
+import json
 
 from config_util import get_config_data
 
@@ -9,6 +11,7 @@ config = get_config_data()
 
 REGION_NAME= config['REGION_NAME']
 REQUEST_QUEUE = config['REQUEST_QUEUE']
+RESPONSE_QUEUE = config['RESPONSE_QUEUE']
 AWS_ACCESS_KEY_ID = config['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = config['AWS_SECRET_ACCESS_KEY']
 
@@ -24,11 +27,11 @@ def get_SQS_Client():
     return sqs_client
 
 # Get the Request SQS Resource size
-def get_Request_Queue_Size():
+def get_Request_Queue_Size(queue_url):
     sqs_client = get_SQS_Client()
 
     response = sqs_client.get_queue_attributes(
-        QueueUrl= REQUEST_QUEUE,
+        QueueUrl= queue_url,
         AttributeNames=['ApproximateNumberOfMessagesNotVisible', 'ApproximateNumberOfMessages']
     )
 
@@ -39,12 +42,30 @@ def get_Request_Queue_Size():
     total_messages =  undeleted_msg_count + visible_msg_count
     return total_messages
 
+def poll_response_queue():
+    sqs_client = get_SQS_Client()
+    total_messages_in_queue = get_Request_Queue_Size(RESPONSE_QUEUE)
+    print(str(datetime.datetime.now()) + f" Saving outputs of {total_messages_in_queue} messages from response queue")
+    while total_messages_in_queue>0:
+        total_messages_in_queue = get_Request_Queue_Size(RESPONSE_QUEUE)
+        messages = sqs_client.receive_message(QueueUrl=RESPONSE_QUEUE, MaxNumberOfMessages=10)
+        messages = messages.get('Messages', [])
+        for message in messages:
+            msg_Identifier = message['ReceiptHandle']
+            response = json.loads((message['Body']))
+            request_id = response['request_id']
+            classifier_output = response['classifier_output']
+            f = open(f"output/{request_id}.txt", "a")
+            f.write(classifier_output)
+            f.close()
+            sqs_client.delete_message(QueueUrl=REQUEST_QUEUE, ReceiptHandle=msg_Identifier)
 
 if __name__ == '__main__':
     ec2_pool = AppTierEc2Pool()
 
     while True:
-        total_messages_in_queue = get_Request_Queue_Size()
+        print(str(datetime.datetime.now()) + " Polling the Request queue for messages")
+        total_messages_in_queue = get_Request_Queue_Size(REQUEST_QUEUE)
         total_active_instances = ec2_pool.maxInstances - ec2_pool.shutdown_requests_count - len(ec2_pool.app_tier_available_ids)
 
         total_required_instance = total_messages_in_queue - total_active_instances
@@ -63,7 +84,7 @@ if __name__ == '__main__':
             ec2_pool.send_Request_to_Shutdown_Queue(delete_instance_count)
         
         ec2_pool.terminate_EC2_Instances()
+        poll_response_queue()
 
         # Poll messages from the Request queue again after 10 seconds 
         time.sleep(10)
-        print(str(datetime.datetime.now()) + " Polling the Request queue for messages")

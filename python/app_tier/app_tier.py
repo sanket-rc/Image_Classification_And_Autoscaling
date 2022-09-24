@@ -95,7 +95,7 @@ while True:
 
         s3_client.put_object(Key=key,Bucket= OUTPUT_BUCKET,Body=body)
         sqs_client.send_message(QueueUrl=RESPONSE_QUEUE, MessageBody=json.dumps({
-            'id' : sys.argv[1],
+            'request_id' : sys.argv[1],
             'classifier_output' : body
         }))
 
