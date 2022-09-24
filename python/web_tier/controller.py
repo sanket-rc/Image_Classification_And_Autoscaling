@@ -58,7 +58,7 @@ def poll_response_queue():
             f = open(f"output/{request_id}.txt", "a")
             f.write(classifier_output)
             f.close()
-            sqs_client.delete_message(QueueUrl=REQUEST_QUEUE, ReceiptHandle=msg_Identifier)
+            sqs_client.delete_message(QueueUrl=RESPONSE_QUEUE, ReceiptHandle=msg_Identifier)
 
 if __name__ == '__main__':
     ec2_pool = AppTierEc2Pool()

@@ -15,8 +15,8 @@ cd /home/ec2-user/web_tier
 echo "ran cd"
 pwd
 nohup python3 web_tier.py >> weblogs.txt &
-echo "ran python web tier"
 sleep 50
+echo "ran python web tier"
 nohup python3 controller.py >> control_logs.txt &
 sleep 50
 echo "ran python controller"

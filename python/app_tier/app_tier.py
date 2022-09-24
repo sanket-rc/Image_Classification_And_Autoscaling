@@ -77,7 +77,10 @@ while True:
 
     if len(sqs_request_messages) > 0:
         sqs_message = sqs_request_messages[0]
-        file_name = sqs_message['Body']
+        #file_name = sqs_message['Body']
+        body = json.loads(sqs_message['Body'])
+        file_name = body['filename']
+        request_id = body['request_id']
         identifier = sqs_message['ReceiptHandle']
 
         # Get the image download path
@@ -95,8 +98,8 @@ while True:
 
         s3_client.put_object(Key=key,Bucket= OUTPUT_BUCKET,Body=body)
         sqs_client.send_message(QueueUrl=RESPONSE_QUEUE, MessageBody=json.dumps({
-            'request_id' : sys.argv[1],
-            'classifier_output' : body
+            'request_id' : request_id,
+            'classifier_output' : classification_result
         }))
 
         print(str(datetime.datetime.now()) + '########## Deleting message from the Request Queue ##########')

@@ -50,16 +50,16 @@ def save_img_to_bucket(data, filename):
 # Sends the image data to the Request SQS
 def send_img_request_to_sqs(filename):
     request_id = str(uuid.uuid4())
-    # json_payload = {
-    #     'filename': filename,
-    #     'request_id': request_id
-    # }
+    json_payload = {
+        'filename': filename,
+        'request_id': request_id
+    }
     sqs = get_SQS_Client()
 
     sqs.send_message(
             QueueUrl=REQUEST_QUEUE,
-            MessageBody = filename,
-            #MessageBody=json.dumps(json_payload),
+            #MessageBody = filename,
+            MessageBody=json.dumps(json_payload),
             DelaySeconds=0
     )
     return request_id
