@@ -7,7 +7,6 @@ resource "aws_instance" "web_server_ec2" {
   vpc_security_group_ids      = [aws_security_group.pro1_security_group.id]
   subnet_id                   = aws_subnet.web_tier.id
   depends_on                  = [local_file.config_file_web, aws_security_group.pro1_security_group]
-  user_data                   = file("startup_webtier.sh")
 
   provisioner "file" {
     source      = "../python/web_tier"
@@ -29,6 +28,18 @@ resource "aws_instance" "web_server_ec2" {
       host        = self.public_ip
       private_key = file("id_rsa.pem")
     }
+  }
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      host        = self.public_ip
+      private_key = file("id_rsa.pem")
+    }
+    inline = [
+      "chmod +x /home/ec2-user/web_tier",
+      "bash /home/ec2-user/web_tier/startup_webtier.sh",
+    ]
   }
 
   tags = {
