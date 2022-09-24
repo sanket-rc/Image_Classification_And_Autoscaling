@@ -11,6 +11,13 @@ echo "Installations Done" >> /home/ec2-user/startuplog.txt
 chmod +x /home/ec2-user/web_tier
 echo "xxxxxxxxxxxxxxxxxxxxxxxxxxx" >> /home/ec2-user/startuplog.txt
 echo "running server" >> /home/ec2-user/startuplog.txt
-python3 /home/ec2-user/web_tier/web_tier.py >> /home/ec2-user/web_tier/webtier_logs.txt &
-python3 /home/ec2-user/web_tier/controller.py >> /home/ec2-user/web_tier/controller_logs.txt &
+cd /home/ec2-user/web_tier
+echo "ran cd"
+pwd
+nohup python3 web_tier.py >> weblogs.txt &
+echo "ran python web tier"
+sleep 50
+nohup python3 controller.py >> control_logs.txt &
+sleep 50
+echo "ran python controller"
 echo "Done" >> /home/ec2-user/startuplog.txt
