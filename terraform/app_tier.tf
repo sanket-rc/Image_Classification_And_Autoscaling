@@ -7,7 +7,7 @@ resource "aws_instance" "app_ec2" {
   vpc_security_group_ids      = [aws_security_group.pro1_security_group.id]
   subnet_id                   = aws_subnet.app_tier.id
   depends_on                  = [local_file.config_file_app, aws_security_group.pro1_security_group]
-  user_data = file("startup_apptier.sh")
+  user_data                   = file("startup_apptier.sh")
 
   provisioner "file" {
     source      = "../python/app_tier"
@@ -16,7 +16,7 @@ resource "aws_instance" "app_ec2" {
       type        = "ssh"
       user        = "ubuntu"
       host        = self.public_ip
-      private_key = file("id_rsa.pem")
+      private_key = file(var.ssh_pem_file_path)
     }
   }
 
@@ -27,7 +27,7 @@ resource "aws_instance" "app_ec2" {
       type        = "ssh"
       user        = "ubuntu"
       host        = self.public_ip
-      private_key = file("id_rsa.pem")
+      private_key = file(var.ssh_pem_file_path)
     }
   }
 

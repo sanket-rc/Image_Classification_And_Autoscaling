@@ -15,7 +15,7 @@ resource "aws_instance" "web_server_ec2" {
       type        = "ssh"
       user        = "ec2-user"
       host        = self.public_ip
-      private_key = file("id_rsa.pem")
+      private_key = file(var.ssh_pem_file_path)
     }
   }
 
@@ -26,7 +26,7 @@ resource "aws_instance" "web_server_ec2" {
       type        = "ssh"
       user        = "ec2-user"
       host        = self.public_ip
-      private_key = file("id_rsa.pem")
+      private_key = file(var.ssh_pem_file_path)
     }
   }
   provisioner "remote-exec" {
@@ -34,7 +34,7 @@ resource "aws_instance" "web_server_ec2" {
       type        = "ssh"
       user        = "ec2-user"
       host        = self.public_ip
-      private_key = file("id_rsa.pem")
+      private_key = file(var.ssh_pem_file_path)
     }
     inline = [
       "chmod +x /home/ec2-user/web_tier",

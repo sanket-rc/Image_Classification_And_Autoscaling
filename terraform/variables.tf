@@ -44,3 +44,8 @@ variable "output_bucket_name" {
   type    = string
   default = "pro1output"
 }
+
+variable "ssh_pem_file_path" {
+  type    = string
+  default = "id_rsa.pem"
+}
