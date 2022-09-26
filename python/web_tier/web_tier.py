@@ -27,13 +27,14 @@ def upload_image():
             max_attempts = 100
             attempt = 0
             response = None
-            while attempt<max_attempts:
+            # while attempt<max_attempts:
+            while True:
                 if os.path.isfile(f"output/{request_id}.txt"):
                     with open(f"output/{request_id}.txt") as f:
                         response = f.read()
                         break
-                attempt += 1
-                time.sleep(10)
+                # attempt += 1
+                # time.sleep(10)
             if response:
                 os.remove(f"output/{request_id}.txt")
                 return {str(datetime.datetime.now()) + ' message' : f'Classification result: {response}'}, 200

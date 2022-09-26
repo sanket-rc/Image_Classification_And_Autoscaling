@@ -106,7 +106,7 @@ while True:
         sqs_client.delete_message(QueueUrl=REQUEST_QUEUE, ReceiptHandle = identifier)
         print(str(datetime.datetime.now()) + ' Message successfully deleted from Request Queue')
     
-    # Checks the Terminate Request Queue after each request meaages is procesed
+    # Checks the Terminate Request Queue after each request message is procesed
     response = sqs_client.receive_message(QueueUrl=TERMINATE_REQUEST_QUEUE)
     messages = response.get('Messages', [])
 
