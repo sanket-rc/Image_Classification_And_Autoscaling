@@ -66,6 +66,7 @@ if __name__ == '__main__':
     while True:
         print(str(datetime.datetime.now()) + " Polling the Request queue for messages")
         total_messages_in_queue = get_Request_Queue_Size(REQUEST_QUEUE)
+        print(str(datetime.datetime.now()) + " Polling Request queue completed")
         total_active_instances = ec2_pool.maxInstances - ec2_pool.shutdown_requests_count - len(ec2_pool.app_tier_available_ids)
 
         total_required_instance = total_messages_in_queue - total_active_instances
@@ -84,7 +85,7 @@ if __name__ == '__main__':
             ec2_pool.send_Request_to_Shutdown_Queue(delete_instance_count)
         
         ec2_pool.terminate_EC2_Instances()
-        poll_response_queue()
+        # poll_response_queue()
 
         # Poll messages from the Request queue again after 10 seconds 
         time.sleep(10)

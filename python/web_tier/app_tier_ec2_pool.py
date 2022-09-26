@@ -62,6 +62,8 @@ class AppTierEc2Pool:
             # Startup script
             user_data = f"""#!/bin/bash
                 cd /home/ubuntu/app_tier/
+                pip3 install boto3;
+                pip3 install pyyaml;
                 su ubuntu -c "nohup python3 app_tier.py {app_tier_identifier}; exec sh"
                 """
 

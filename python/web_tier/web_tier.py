@@ -29,17 +29,21 @@ def upload_image():
             response = None
             # while attempt<max_attempts:
             while True:
-                if os.path.isfile(f"output/{request_id}.txt"):
-                    with open(f"output/{request_id}.txt") as f:
-                        response = f.read()
-                        break
+                # if os.path.isfile(f"output/{request_id}.txt"):
+                #     with open(f"output/{request_id}.txt") as f:
+                #         response = f.read()
+                #         break
                 # attempt += 1
                 # time.sleep(10)
-            if response:
-                os.remove(f"output/{request_id}.txt")
-                return {str(datetime.datetime.now()) + ' message' : f'Classification result: {response}'}, 200
-            else:
-                return {str(datetime.datetime.now()) + ' message' : f'Max attempts exceeded. Response not found.'}, 400
+                response = aws_resources.poll_response_queue()
+                if response:
+                    break
+            # if response:
+            #     os.remove(f"output/{request_id}.txt")
+            #     return {str(datetime.datetime.now()) + ' message' : f'Classification result: {response}'}, 200
+            # else:
+            #     return {str(datetime.datetime.now()) + ' message' : f'Max attempts exceeded. Response not found.'}, 400
+            return {str(datetime.datetime.now()) + ' message' : f'Classification result: {response}'}, 200
         except:
             traceback.print_exc()
             return { str(datetime.datetime.now()) + 'message': 'Internal server error' }, 500

@@ -2,7 +2,7 @@ from webbrowser import get
 from flask import Flask , request
 import boto3
 import os
-import json, sys, time,uuid
+import json, sys, time
 import datetime
 
 
@@ -77,7 +77,6 @@ while True:
 
     if len(sqs_request_messages) > 0:
         sqs_message = sqs_request_messages[0]
-        #file_name = sqs_message['Body']
         body = json.loads(sqs_message['Body'])
         file_name = body['filename']
         request_id = body['request_id']
@@ -97,10 +96,11 @@ while True:
         print(str(datetime.datetime.now()) + " Key-value pair sent to response queue : " + body)
 
         s3_client.put_object(Key=key,Bucket= OUTPUT_BUCKET,Body=body)
-        sqs_client.send_message(QueueUrl=RESPONSE_QUEUE, MessageBody=json.dumps({
-            'request_id' : request_id,
-            'classifier_output' : classification_result
-        }))
+        sqs_client.send_message(QueueUrl=RESPONSE_QUEUE,
+            MessageBody=json.dumps({
+                'request_id' : request_id,
+                'classifier_output' : classification_result
+            }), DelaySeconds=0)
 
         print(str(datetime.datetime.now()) + '########## Deleting message from the Request Queue ##########')
         sqs_client.delete_message(QueueUrl=REQUEST_QUEUE, ReceiptHandle = identifier)
