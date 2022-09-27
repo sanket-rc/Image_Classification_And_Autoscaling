@@ -234,8 +234,11 @@ https://flask.palletsprojects.com/en/2.2.x/
 
 # Need to run below commands in the Terminal
 $Env:AWS_ACCESS_KEY_ID          =         XXXXXXXXXXXXXXXXXXXX
+
 $Env:AWS_SECRET_ACCESS_KEY      =         XXXXXXXXXXXXXXXXXXXX
+
 $Env:TF_VAR_aws_access_key_id   =         XXXXXXXXXXXXXXXXXXXX
+
 $Env:TF_VAR_aws_secret_key_id   =         XXXXXXXXXXXXXXXXXXXX
 
 
