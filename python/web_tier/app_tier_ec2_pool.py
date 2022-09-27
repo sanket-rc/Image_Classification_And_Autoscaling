@@ -73,7 +73,14 @@ class AppTierEc2Pool:
                 MaxCount = 1,
                 InstanceType="t2.micro",
                 KeyName=KEY_NAME,
-                UserData = user_data
+                UserData = user_data,
+                TagSpecifications=[{  # Give instance name based on App Tier ID
+                    'ResourceType': 'instance',
+                    'Tags': [{
+                        'Key': 'Name',
+                        'Value': f'app-instance{app_tier_identifier}'
+                    }]
+                }]
             )
 
             # Get the instance Id os the launched EC2

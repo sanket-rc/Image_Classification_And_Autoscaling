@@ -24,25 +24,11 @@ def upload_image():
             aws_resources.save_img_to_bucket(myfile.stream, myfile.filename)
             request_id = aws_resources.send_img_request_to_sqs(myfile.filename)
             print(str(datetime.datetime.now()) + " Image saved to the Input Bucket and request send to input Queue")
-            max_attempts = 100
-            attempt = 0
             response = None
-            # while attempt<max_attempts:
             while True:
-                # if os.path.isfile(f"output/{request_id}.txt"):
-                #     with open(f"output/{request_id}.txt") as f:
-                #         response = f.read()
-                #         break
-                # attempt += 1
-                # time.sleep(10)
                 response = aws_resources.poll_response_queue()
                 if response:
                     break
-            # if response:
-            #     os.remove(f"output/{request_id}.txt")
-            #     return {str(datetime.datetime.now()) + ' message' : f'Classification result: {response}'}, 200
-            # else:
-            #     return {str(datetime.datetime.now()) + ' message' : f'Max attempts exceeded. Response not found.'}, 400
             return {str(datetime.datetime.now()) + ' message' : f'Classification result: {response}'}, 200
         except:
             traceback.print_exc()

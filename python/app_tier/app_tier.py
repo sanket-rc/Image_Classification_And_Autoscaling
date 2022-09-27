@@ -100,7 +100,7 @@ while True:
             MessageBody=json.dumps({
                 'request_id' : request_id,
                 'classifier_output' : classification_result
-            }), DelaySeconds=0)
+            }),DelaySeconds = 0)
 
         print(str(datetime.datetime.now()) + '########## Deleting message from the Request Queue ##########')
         sqs_client.delete_message(QueueUrl=REQUEST_QUEUE, ReceiptHandle = identifier)
