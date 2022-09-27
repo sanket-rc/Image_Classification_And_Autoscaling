@@ -1,3 +1,14 @@
+## Problem Statement
+
+Applications deployed on local or isolated servers are prone to scalability issues. We will need to manually scale the application servers as the service's demand rises. This raises the service's overall hardware and operational costs. Extra servers will be needed in the event of a sudden increase in demand for an internet-based service, and this cannot be set up quickly.
+
+Nearly all scalable apps are now deployed in the cloud in this era of computing. Cloud computing service providers like Amazon Web Services, Microsoft Azure, Google Cloud Platform, and others offer a variety of solutions including load balancing and auto scaling to address the aforementioned challenges. With the push of a button or by keeping an eye on various matrices available for the services we run, these cloud services enable us to instantly deploy more servers that can handle the new demands.
+
+In this project, we aim to set up an image recognition system that can manage several requests concurrently in the AWS cloud. The number of application servers will be scaled up in response to a sudden increase in requests to ensure that all client requests are processed promptly. When demand is low, the service also aims to decrease the number of instances down to a minimum. This aids in lowering the service's operating expenses.
+
+This project will show how to use cloud computing's capabilities to lower operational costs and manual efforts to successfully run an internet-based service.
+
+
 ## Architecture
 ![Architecture](images/Architecture.png)
 
@@ -20,9 +31,9 @@ The controller maintains a pool of EC2 instances, i.e. App Tier instances. Each 
 Autoscaling, sometimes also called automatic scaling, is a method used in cloud computing that dynamically adjusts the number of computational resources in a server farm - typically measured by the number of active servers - automatically based on the load on the farm. AWS Auto Scaling is a service that assists organizations in supervising AWS-based software and infrastructure. The service automatically adjusts capacity to maintain steady, predictable performance at the lowest possible cost.  Using AWS Auto Scaling, you maintain optimal application performance and availability, even when workloads are periodic, unpredictable, or continuously changing. The overall benefit of auto scaling is that it eliminates the need to respond manually in real-time to traffic spikes that merit new resources and instances by automatically changing the active number of servers.
 
 The benefits of auto-scaling include-
-•Better fault tolerance: Auto-scaling helps in determining and detecting which of the instances present on the server is unhealthy. Once established, the unhealthy instance is quickly terminated, and another healthy instance is sent as a replacement for the unhealthy one.
-•Better availability: Auto-scaling helps in ensuring that the application has the right amount of capacity for handling the current traffic demand
-•Better cost management: Auto-scaling can dynamically increase and decrease the capacity as required. With auto-scaling, one can launch instances when needed and also terminate these when they are not required.
+1) Better fault tolerance: Auto-scaling helps in determining and detecting which of the instances present on the server is unhealthy. Once established, the unhealthy instance is quickly terminated, and another healthy instance is sent as a replacement for the unhealthy one.
+2) Better availability: Auto-scaling helps in ensuring that the application has the right amount of capacity for handling the current traffic demand
+3) Better cost management: Auto-scaling can dynamically increase and decrease the capacity as required. With auto-scaling, one can launch instances when needed and also terminate these when they are not required.
  
 In this project we have two queues associated with auto scaling. One of them is Terminate Request Queue and the other is Terminate Confirm Queue. 
  
@@ -99,17 +110,29 @@ The web tier instance consists of the web_tier and controller and the instance p
 Code Description:
 
 *save_img_to_bucket()* ⇒ Saves the input image to the Bucket
+
 *send_img_request_to_sqs()* ⇒ Saves the input image data to Request Queue
+
 *get_S3_Client()* ⇒ Get the S3 Resource in the the given region
+
 *get_SQS_Client()* ⇒ Get the SQS Resource in the given region. It sends JSON data in the body.
+
 *Controller file* : Monitors the Request Queue and Upscales/Downscales the App Tier instances.
+
 *get_Request_Queue_Size()* ⇒ Get the Request Queue Resource size
+
 *get_config_data()* ⇒ Reads the configuration data from the file created by the terraform. This file contains all the information about the resources like SQS and Bucket URLs, AMI name etc.
+
 *poll_response_queue()* ⇒ It monitors the Response Queue and consumes messages from it.
+
 *cancel_Request_In_Shudown_Queue()* ⇒ It cancels requests in the Queue based on the count provided. This is used to prevent shutdown of running instances when new requests come in the Request Queue.
+
 *launch_instances()* ⇒ Launch new instances based on the count provided
+
 *send_Request_to_Shutdown_Queue()* ⇒ Send request to Terminate Request Queue based on the count provided
+
 *terminate_EC2_Instances()* ⇒ Initiates the process of terminating the App Tier instance when the message count in the Request queue is less.
+
 *create_ec2_instance()* ⇒ Creates a new instance of EC2 based on the parameters
 
 ### App Tier
@@ -119,8 +142,11 @@ The App Tier instance consists of the Classifier and the App Tier python file. I
 Code Description:
 
 *get_S3_Client()* ⇒ Get the S3 Resource in the the given region
+
 *get_SQS_Client()* ⇒ Get the SQS Resource in the given region. It sends JSON data in the body.
+
 *downloadImage()* ⇒ Download the Image from the Input Bucket in given location as parameter
+
 *get_classification_results()* ⇒ Does image recognition using the directory of the input image. It runs the classifier python file.
 
 
@@ -142,8 +168,11 @@ Don’t forget to add terraform executable to the Path variables in Windows.
 AWS credentials are passed to terraform using environment variables. Set the following environment variables with their values as obtained in the previous section, in the local machine terminal for deployment.
 
 *AWS_ACCESS_KEY_ID*
+
 *AWS_SECRET_ACCESS_KEY*
+
 *TF_VAR_aws_access_key_id*
+
 *TF_VAR_aws_secret_key_id*
 
 ### TFVARS file
@@ -178,7 +207,9 @@ This will destroy all the resources created in AWS cloud for this project.
 ### References:
 
 https://www.terraform.io/docs
+
 https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
+
 https://flask.palletsprojects.com/en/2.2.x/
 
 
@@ -201,7 +232,7 @@ https://flask.palletsprojects.com/en/2.2.x/
     2. pro1output
 
 
-# Need to run below commands in the PowerShell/Terminal
+# Need to run below commands in the Terminal
 $Env:AWS_ACCESS_KEY_ID          =         XXXXXXXXXXXXXXXXXXXX
 $Env:AWS_SECRET_ACCESS_KEY      =         XXXXXXXXXXXXXXXXXXXX
 $Env:TF_VAR_aws_access_key_id   =         XXXXXXXXXXXXXXXXXXXX
